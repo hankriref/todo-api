@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Todo</title>
+<style>body{font-family:Arial;max-width:600px;margin:20px auto}li{display:flex;justify-content:space-between;border:1px solid #ccc;padding:5px;margin:5px 0}</style>
+</head>
+<body>
+<h2>Todo List</h2>
+<form id="f"><input id="t" placeholder="Titre" required><button>Ajouter</button></form>
+<ul id="l"></ul>
+<script>
+const API='http://127.0.0.1:8000/api/tasks';
+const h={'Accept':'application/json','Content-Type':'application/json'};
+async function load(){let r=await fetch(API,{headers:h});let d=await r.json();l.innerHTML='';d.forEach(x=>{l.innerHTML+=`<li>${x.id}-${x.title} <button onclick="del(${x.id})">X</button></li>`})}
+async function del(id){await fetch(API+'/'+id,{method:'DELETE',headers:h});load()}
+f.onsubmit=async e=>{e.preventDefault();await fetch(API,{method:'POST',headers:h,body:JSON.stringify({title:t.value})});t.value='';load()}
+load();
+</script>
+</body>
+</html>
